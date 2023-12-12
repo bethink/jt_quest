@@ -6,6 +6,7 @@ import cors from 'cors';
 import * as middlewares from './middlewares';
 import api from './api';
 import MessageResponse from './interfaces/MessageResponse';
+import { questRoutes } from './api/quest_api';
 
 require('dotenv').config();
 
@@ -30,6 +31,7 @@ app.get<{}, MessageResponse>('/auth/twitter', (req, res) => {
 });
 
 app.use('/api/v1', api);
+app.use('/api/v1/quests', questRoutes);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);

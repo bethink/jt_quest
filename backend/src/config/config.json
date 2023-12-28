@@ -1,21 +1,22 @@
 {
   "development": {
-    "username": "apple",
-    "password": "postgres",
-    "database": "quest_development",
-    "host": "127.0.0.1",
+    "username": "postgres",
+    "password": "12345",
+    "database": "quest_development_1",
+    "host": "localhost",
+    "port": 3000,
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
-    "password": "postgres",
+    "password": "12345",
     "database": "quest_test",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
-    "password": "postgres",
+    "password": "12345",
     "database": "quest_production",
     "host": "127.0.0.1",
     "dialect": "postgres"

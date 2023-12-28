@@ -2,6 +2,8 @@
 
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '.';
+import { Client } from './client';
+import slugify from 'slugify';
 
 class Quest extends Model {
   public id!: number;
@@ -16,8 +18,15 @@ class Quest extends Model {
   public network!: string;
   public token_symbol!: string;
   public primary_address!: string;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+
+  static associate(models: any) {
+    Quest.belongsTo(models.Client, {
+      foreignKey: 'client_id',
+      onDelete: 'CASCADE', // Adjust this based on your requirements
+    });
+  }
 }
 
 Quest.init(
@@ -38,6 +47,10 @@ Quest.init(
     client_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'Client',
+        key: 'id',
+      },
     },
     slug: {
       type: DataTypes.STRING,
@@ -72,21 +85,24 @@ Quest.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: 'created_at',
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: 'updated_at',
     },
   },
   {
     sequelize,
     modelName: 'Quest',
     tableName: 'quests',
-    timestamps: true, // Assuming you handle timestamps manually
+    timestamps: true,
   }
 );
+
 
 export { Quest };

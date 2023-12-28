@@ -1,22 +1,16 @@
 import express from 'express';
-
 import MessageResponse from '../interfaces/MessageResponse';
 import emojis from './emojis';
 
-const router = express.Router();
 
-router.get<{}, MessageResponse>('/', (req, res) => {
-  res.json({
-    message: 'API - sdf',
-  });
-});
+// // const router = express.Router();
 
-router.get<{}, MessageResponse>('/login', (req, res) => {
-  res.json({
-    message: 'API sdfsdf',
-  });
-});
+// router.get<{}, MessageResponse>('/api', (req, res) => {
+//   res.json({
+//     message: 'API - sdf',
+//   });
+// });
 
-router.use('/emojis', emojis);
+// router.use('/emojis', emojis);
 
-export default router;
+// export default router;

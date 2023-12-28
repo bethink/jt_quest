@@ -1,5 +1,3 @@
-// models/client.ts
-
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '.';
 
@@ -21,20 +19,27 @@ Client.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    created_at: {
-      type: DataTypes.DATE,
+    slug: {
+      type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
-    updated_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: "created_at"
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: "updated_at"
     },
   },
   {
     sequelize,
     modelName: 'Client',
-    tableName: 'Clients',
-    timestamps: false,
+    tableName: 'clients',
+    timestamps: true,
   }
 );
 

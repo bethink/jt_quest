@@ -1,17 +1,15 @@
 import express from 'express';
 import { Quest } from '../models/quest';
-const router = express.Router();
-var slugify = require('slugify')
 
-// creating a new quest 
+const router = express.Router();
+
+
+// Create a quest
 router.post('/quests', async (req, res, next) => {
   try {
-    // Example data for a new quest
     const exampleQuestData = {
       name: req.body.name,
       live: true,
-      client_id: 1,
-      slug: Math.random().toString(36).substring(2, 15),
       categories: ['Adventure', 'Exploration'],
       disable: false,
       points: '100',
@@ -33,19 +31,18 @@ router.post('/quests', async (req, res, next) => {
   }
 });
 
-//fetch all the quest from the db
-router.get('/quests', async (req,res,next)=>{
+// Fetch all quests from the database
+router.get('/quests', async (req, res, next) => {
   try {
- 
-    const allClients = await Quest.findAll();
-    res.json({ data: allClients,message:'success'});
+    const allQuests = await Quest.findAll();
+    res.json({ data: allQuests, message: 'Quests retrieved successfully' });
   } catch (error) {
     console.error(error);
+    next(error);
   }
+});
 
-})
-
-// fetch a quest by id
+// Fetch a quest by ID
 router.get('/quests/:id', async (req, res, next) => {
   try {
     const questId = req.params.id;
@@ -63,7 +60,10 @@ router.get('/quests/:id', async (req, res, next) => {
   }
 });
 
-// Delete a quest using id
+
+
+
+// Delete a quest by ID
 router.delete('/quests/:id', async (req, res, next) => {
   try {
     const questId = req.params.id;
@@ -71,17 +71,16 @@ router.delete('/quests/:id', async (req, res, next) => {
     const quest = await Quest.findByPk(questId);
 
     if (!quest) {
-      return res.status(404).json({ error: 'Client not found' });
+      return res.status(404).json({ error: 'Quest not found' });
     }
 
     await quest.destroy();
 
-    res.json({ message: 'Client deleted successfully' });
+    res.json({ message: 'Quest deleted successfully' });
   } catch (error) {
     console.error(error);
     next(error);
   }
 });
 
-
-  export default router;
+export default router;

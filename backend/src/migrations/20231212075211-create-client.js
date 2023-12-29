@@ -6,19 +6,15 @@ module.exports = {
     await queryInterface.createTable('clients', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      slug: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-
+      
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

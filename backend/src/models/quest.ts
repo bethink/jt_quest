@@ -2,15 +2,18 @@
 
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '.';
-import { Client } from './client';
-import slugify from 'slugify';
+import Hashids from 'hashids/cjs';
+
+const hashids = new Hashids('ASDFGHjkloiu',8);
 
 class Quest extends Model {
   public id!: number;
+  getEncodedId() {
+    return hashids.encode(this.id);
+  }
   public name!: string;
   public live!: boolean;
   public client_id!: number;
-  public slug!: string;
   public categories!: string[];
   public disable!: boolean;
   public points!: string;
@@ -20,21 +23,17 @@ class Quest extends Model {
   public primary_address!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
-
-  static associate(models: any) {
-    Quest.belongsTo(models.Client, {
-      foreignKey: 'client_id',
-      onDelete: 'CASCADE', // Adjust this based on your requirements
-    });
-  }
 }
 
 Quest.init(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+    encodedId: {
+      type: DataTypes.STRING,
+      allowNull: false,
       primaryKey: true,
+      unique: true,
+      field:'id',
+      defaultValue: () => hashids.encode(Date.now()), 
     },
     name: {
       type: DataTypes.STRING,
@@ -43,19 +42,6 @@ Quest.init(
     live: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-    },
-    client_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Client',
-        key: 'id',
-      },
-    },
-    slug: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
     },
     categories: {
       type: DataTypes.ARRAY(DataTypes.STRING),
@@ -78,10 +64,6 @@ Quest.init(
       allowNull: true,
     },
     token_symbol: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    primary_address: {
       type: DataTypes.STRING,
       allowNull: true,
     },

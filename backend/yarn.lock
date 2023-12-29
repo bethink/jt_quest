@@ -2675,6 +2675,11 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+hashids@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.npmjs.org/hashids/-/hashids-2.3.0.tgz"
+  integrity sha512-ljM73TE/avEhNnazxaj0Dw3BbEUuLC5yYCQ9RSkSUcT4ZSU6ZebdKCIBJ+xT/DnSYW36E9k82GH1Q6MydSIosQ==
+
 helmet@*, helmet@^7.1.0:
   version "7.1.0"
   resolved "https://registry.npmjs.org/helmet/-/helmet-7.1.0.tgz"

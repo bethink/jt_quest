@@ -65,7 +65,6 @@ router.post('/clients', async (req, res, next) => {
 
     const newClientData = {
       name: req.body.name,
-      slug:req.body.slug,
       updated_at: new Date(),
       created_at: new Date(),
     };

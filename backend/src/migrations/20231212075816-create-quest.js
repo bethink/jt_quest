@@ -6,9 +6,9 @@ module.exports = {
     await queryInterface.createTable('quests', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
+        autoIncrement:false,
       },
       name: {
         type: Sequelize.STRING,
@@ -18,18 +18,6 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
-      },
-      client_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'clients',  // Assuming you have a 'Clients' table
-          key: 'id',
-        },
-        allowNull: false,
-      },
-      slug: {
-        type: Sequelize.STRING,
-        allowNull: false,
       },
       categories: {
         type: Sequelize.ARRAY(Sequelize.STRING),
@@ -53,10 +41,6 @@ module.exports = {
         allowNull: true,
       },
       token_symbol: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      primary_address: {
         type: Sequelize.STRING,
         allowNull: true,
       },

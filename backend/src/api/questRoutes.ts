@@ -35,7 +35,7 @@ router.post('/quests', async (req, res, next) => {
 router.get('/quests', async (req, res, next) => {
   try {
     const allQuests = await Quest.findAll();
-    res.json({ data: allQuests, message: 'Quests retrieved successfully' });
+    res.json({ data: allQuests, message: 'success' });
   } catch (error) {
     console.error(error);
     next(error);
@@ -60,7 +60,9 @@ router.get('/quests/:id', async (req, res, next) => {
   }
 });
 
-
+// router.get('/quest/details', (req, res) => {
+//   res.json({ message: 'details not found' });
+// });
 
 
 // Delete a quest by ID

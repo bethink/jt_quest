@@ -4,13 +4,13 @@ import helmet from 'helmet';
 import cors from 'cors';
 
 import * as middlewares from './middlewares';
-// import api from './api';
 import MessageResponse from './interfaces/MessageResponse';
 import { ClientRequest } from 'http';
- import clientRoutes from './api/clientRoutes';
+import sequelize from './models';
+import clientRoutes from './api/clientRoutes';
  import questRoutes from './api/questRoutes';
  import questapi from './api/quest_api'
- import sequelize from './models';
+import userRoutes from './api/userRoutes'
 
 require('dotenv').config();
 
@@ -23,9 +23,10 @@ app.use(express.json());
 
 
 
-app.use('/api/v3', questapi);
+app.use('/api/v1', questapi);
 app.use('/api/v1', clientRoutes);
-app.use('/api/v1', questRoutes)
+app.use('/api/v1', questRoutes);
+app.use('/api/v1', userRoutes)
 
 
  app.use(middlewares.notFound);

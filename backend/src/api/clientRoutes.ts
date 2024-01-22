@@ -3,7 +3,7 @@ import { Client } from '../models/client';
 
 const router = express.Router();
 
-//find all the users from the db
+//find all the cleints from the db
 router.get('/clients', async (req, res, next) => {
   
   try {

@@ -1,5 +1,7 @@
 import express from 'express';
 import { Quest } from '../models/quest';
+import { QuestParticipant } from '../models/questparticipant';
+import { User } from '../models/user';
 
 const router = express.Router();
 
@@ -53,7 +55,7 @@ router.get('/quests/:id', async (req, res, next) => {
       return res.status(404).json({ error: 'Client not found' });
     }
 
-    res.json({ data: quest, message: 'Client retrieved successfully' });
+    res.json({ data: quest, message: 'quest retrieved successfully' });
   } catch (error) {
     console.error(error);
     next(error);
@@ -79,6 +81,36 @@ router.delete('/quests/:id', async (req, res, next) => {
     await quest.destroy();
 
     res.json({ message: 'Quest deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+
+router.post('/quest-participants', async (req, res, next) => {
+  try {
+    const { quest_id, user_id } = req.body;
+
+    // Check if a QuestParticipant already exists for the user and quest
+    const existingQuestParticipant = await QuestParticipant.findOne({
+      where: { quest_id, user_id },
+    });
+
+    if (existingQuestParticipant) {
+      return res.status(400).json({ error: 'QuestParticipant already exists' });
+    }
+
+    // If no existing QuestParticipant, create a new one
+    const newQuestParticipant = await QuestParticipant.create({
+      quest_id,
+      user_id,
+    });
+
+    res.status(201).json({
+      data: newQuestParticipant,
+      message: 'QuestParticipant created successfully',
+    });
   } catch (error) {
     console.error(error);
     next(error);

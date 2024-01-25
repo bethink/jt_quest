@@ -1,8 +1,8 @@
-// models/quest.ts
 
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '.';
 import Hashids from 'hashids/cjs';
+import { QuestParticipant } from './questparticipant';
 
 const hashids = new Hashids('ASDFGHjkloiu',8);
 
@@ -85,6 +85,5 @@ Quest.init(
     timestamps: true,
   }
 );
-
 
 export { Quest };

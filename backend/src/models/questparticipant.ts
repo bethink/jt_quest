@@ -1,65 +1,61 @@
-// models/user.ts
-
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '.';
 import Hashids from 'hashids/cjs';
+import { User } from './user';
+import { Quest } from './quest';
 
-const hashids = new Hashids('ASDFGHjkloiu', 8);
+const hashids = new Hashids('aswqsxcderf', 8);
 
-class User extends Model {
+class QuestParticipant extends Model {
   public id!: number;
   getEncodedId() {
     return hashids.encode(this.id);
   }
-  public name!: string;
-  public twitter_username!: string;
-  public email_id!: string;
-  public public_address!: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
 }
 
-User.init(
+QuestParticipant.init(
   {
     encodedId: {
       type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true,
       unique: true,
-      field:'id',
+      field: 'id',
       defaultValue: () => hashids.encode(Date.now()),
     },
-    name: {
-      type: DataTypes.STRING,
+    quest_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'Quest',
+        key: 'id',
+      },
     },
-    twitter_username: {
-      type: DataTypes.STRING,
+    user_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    email_id: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    public_address: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      references: {
+        model: 'User',
+        key: 'id',
+      },
     },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: 'created_at',
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: 'updated_at',
     },
   },
   {
     sequelize,
-    modelName: 'User',
-    tableName: 'users',
+    modelName: 'QuestParticipant',
+    tableName: 'quest_participants',
     timestamps: true,
   }
 );
 
-export { User };
+export { QuestParticipant };

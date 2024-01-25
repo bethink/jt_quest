@@ -3,6 +3,8 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '.';
 import Hashids from 'hashids/cjs';
+import { QuestParticipant } from './questparticipant'; 
+import { Quest } from './quest';
 
 const hashids = new Hashids('ASDFGHjkloiu', 8);
 
@@ -26,7 +28,7 @@ User.init(
       allowNull: false,
       primaryKey: true,
       unique: true,
-      field:'id',
+      field: 'id',
       defaultValue: () => hashids.encode(Date.now()),
     },
     name: {
@@ -61,5 +63,11 @@ User.init(
     timestamps: true,
   }
 );
+
+User.belongsToMany(Quest, {
+  through: QuestParticipant,
+  foreignKey: 'user_id',
+  otherKey: 'quest_id',
+});
 
 export { User };

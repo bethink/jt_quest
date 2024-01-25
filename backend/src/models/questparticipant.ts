@@ -11,7 +11,25 @@ class QuestParticipant extends Model {
   getEncodedId() {
     return hashids.encode(this.id);
   }
+  public userId!: number;
+  public questId!: number;
+  public encodedId!: string;
+  public user!: User;
+  public quest!: Quest;
+
+  static associate(models: any) {
+    QuestParticipant.belongsTo(models.User, {
+      foreignKey: 'user_id',
+      onDelete: 'CASCADE',
+    });
+
+    QuestParticipant.belongsTo(models.Quest, {
+      foreignKey: 'quest_id',
+      onDelete: 'CASCADE',
+    });
+  }
 }
+
 
 QuestParticipant.init(
   {

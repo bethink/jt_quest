@@ -117,4 +117,35 @@ router.post('/quest-participants', async (req, res, next) => {
   }
 });
 
+
+// router.get('/quest-participants', async (req, res) => {
+//   try {
+//     const participants = await QuestParticipant.findAll({
+//       include: [User, Quest],
+//     });
+//     res.json(participants);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+
+// Create a new Quest Participant
+router.post('/quest-participants', async (req, res) => {
+  const { quest_id, user_id } = req.body;
+
+  try {
+    const newParticipant = await QuestParticipant.create({
+      quest_id,
+      user_id,
+      // You may add other fields as needed
+    });
+
+    res.status(201).json(newParticipant);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 export default router;

@@ -62,11 +62,6 @@ router.get('/quests/:id', async (req, res, next) => {
   }
 });
 
-// router.get('/quest/details', (req, res) => {
-//   res.json({ message: 'details not found' });
-// });
-
-
 // Delete a quest by ID
 router.delete('/quests/:id', async (req, res, next) => {
   try {
@@ -88,6 +83,9 @@ router.delete('/quests/:id', async (req, res, next) => {
 });
 
 
+
+//quest-paricipants from here -- //
+
 router.post('/quest-participants', async (req, res, next) => {
   try {
     const { quest_id, user_id } = req.body;
@@ -98,7 +96,7 @@ router.post('/quest-participants', async (req, res, next) => {
     });
 
     if (existingQuestParticipant) {
-      return res.status(400).json({ error: 'QuestParticipant already exists' });
+      return res.status(400).json({ error: 'user has beeen already participated in these quest' });
     }
 
     // If no existing QuestParticipant, create a new one
@@ -118,31 +116,25 @@ router.post('/quest-participants', async (req, res, next) => {
 });
 
 
-// router.get('/quest-participants', async (req, res) => {
-//   try {
-//     const participants = await QuestParticipant.findAll({
-//       include: [User, Quest],
-//     });
-//     res.json(participants);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
-
-
-// Create a new Quest Participant
-router.post('/quest-participants', async (req, res) => {
-  const { quest_id, user_id } = req.body;
-
+router.get('/quest-participants', async (req, res) => {
   try {
-    const newParticipant = await QuestParticipant.create({
-      quest_id,
-      user_id,
-      // You may add other fields as needed
-    });
+    const participants = await QuestParticipant.findAll();
+    res.json(participants);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
-    res.status(201).json(newParticipant);
+
+router.get('/quest-participants/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const participant = await QuestParticipant.findByPk(id);
+    if (!participant) {
+      return res.status(404).json({ error: 'Quest Participant not found' });
+    }
+    res.json(participant);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -16,4 +16,5 @@ router.get('/', async (req,res) => {
   res.send(`GET /api/v1/quests?page=${pageNumber}&page_size=${pageSize}`);
 });
 
+
 export default router;

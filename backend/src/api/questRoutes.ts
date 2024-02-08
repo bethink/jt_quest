@@ -2,6 +2,9 @@ import express from 'express';
 import { Quest } from '../models/quest';
 import { QuestParticipant } from '../models/questparticipant';
 import { User } from '../models/user';
+import { QuestStep } from '../models/queststep';
+
+
 
 const router = express.Router();
 
@@ -86,6 +89,8 @@ router.delete('/quests/:id', async (req, res, next) => {
 
 //quest-paricipants from here -- //
 
+
+
 router.post('/quest-participants', async (req, res, next) => {
   try {
     const { quest_id, user_id } = req.body;
@@ -99,7 +104,7 @@ router.post('/quest-participants', async (req, res, next) => {
       return res.status(400).json({ error: 'user has beeen already participated in these quest' });
     }
 
-    // If no existing QuestParticipant, create a new one
+    // If no existing QuestParticipant create a new one
     const newQuestParticipant = await QuestParticipant.create({
       quest_id,
       user_id,
@@ -115,7 +120,7 @@ router.post('/quest-participants', async (req, res, next) => {
   }
 });
 
-
+//fetch all quest participants
 router.get('/quest-participants', async (req, res) => {
   try {
     const participants = await QuestParticipant.findAll();
@@ -126,7 +131,7 @@ router.get('/quest-participants', async (req, res) => {
   }
 });
 
-
+//fetch questparticipant by id 
 router.get('/quest-participants/:id', async (req, res) => {
   const id = req.params.id;
   try {
@@ -140,4 +145,88 @@ router.get('/quest-participants/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
+
+
+// quest-step-controllers 
+
+interface StepArgsConfig {
+  args: string[];
+  verification: string[];
+}
+
+interface SubCategoryConfig {
+  [key: string]: StepArgsConfig;
+}
+
+interface CategoryConfig {
+  [key: string]: SubCategoryConfig;
+}
+
+const STEPARGS: CategoryConfig = {
+  twitter: {
+    like: {
+      args: ['twitter_id', 'page_url'],
+      verification: ['username'],
+    },
+    retweet: {
+      args: ['twitter_id', 'tweet_id'],
+      verification: ['username', 'tweet_id'],
+    },
+    tweet: {
+      args: ['verification_text', '#guardian', '#jumptrade'],
+      verification: ['username', 'tweet_id'],
+    },
+    quote: {
+      args: ['original_tweet_id', 'verification_text', '#guardian', '#jumptrade'],
+      verification: ['username', 'tweet_id'],
+    },
+    reply: {
+      args: ['original_tweet_id', 'verification_text', '#guardian', '#jumptrade'],
+      verification: ['username', '*tweet_id'],
+    },
+  }
+};
+
+router.post('/quest-steps', async (req, res) => {
+  try {
+    const { questId, category, subCategory, args, instruction } = req.body;
+
+    // Check if the provided category exists in the config
+    if (STEPARGS[category]) {
+      // Check if the provided subCategory exists in the config for the selected category
+      if (STEPARGS[category][subCategory]) {
+        const expectedArgs: string[] = STEPARGS[category][subCategory].args;
+
+        // Validate if the provided args match the expected structure
+        if (expectedArgs.every(arg => args.includes(arg))) {
+          // If validation passes, proceed to create the QuestStep
+          const questStep = await QuestStep.create({
+            questId,
+            category,
+            subCategory,
+            args,
+            instruction,
+          });
+
+          return res.json(questStep);
+        } else {
+          const missingArgs = expectedArgs.filter(arg => !args.includes(arg));
+          return res.status(400).json({ error: `Missing arguments: ${missingArgs.join(', ')}` });
+        }
+      } else {
+        return res.status(400).json({ error: `Invalid subcategory "${subCategory}" for category "${category}".` });
+      }
+    } else {
+      return res.status(400).json({ error: `Invalid category "${category}".` });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 export default router;

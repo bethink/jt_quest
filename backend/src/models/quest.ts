@@ -1,14 +1,19 @@
-// models/quest.ts
 
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '.';
+import Hashids from 'hashids/cjs';
+import { QuestParticipant } from './questparticipant';
+
+const hashids = new Hashids('ASDFGHjkloiu',8);
 
 class Quest extends Model {
   public id!: number;
+  getEncodedId() {
+    return hashids.encode(this.id);
+  }
   public name!: string;
   public live!: boolean;
   public client_id!: number;
-  public slug!: string;
   public categories!: string[];
   public disable!: boolean;
   public points!: string;
@@ -16,16 +21,19 @@ class Quest extends Model {
   public network!: string;
   public token_symbol!: string;
   public primary_address!: string;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 Quest.init(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+    encodedId: {
+      type: DataTypes.STRING,
+      allowNull: false,
       primaryKey: true,
+      unique: true,
+      field:'id',
+      defaultValue: () => hashids.encode(Date.now()), 
     },
     name: {
       type: DataTypes.STRING,
@@ -34,15 +42,6 @@ Quest.init(
     live: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-    },
-    client_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    slug: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
     },
     categories: {
       type: DataTypes.ARRAY(DataTypes.STRING),
@@ -68,24 +67,22 @@ Quest.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    primary_address: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: 'created_at',
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: 'updated_at',
     },
   },
   {
     sequelize,
     modelName: 'Quest',
     tableName: 'quests',
-    timestamps: true, // Assuming you handle timestamps manually
+    timestamps: true,
   }
 );
 
